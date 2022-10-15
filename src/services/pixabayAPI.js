@@ -1,4 +1,4 @@
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 
 export async function getPictures(query) {
   const res = await axios.get('https://pixabay.com/api', {
