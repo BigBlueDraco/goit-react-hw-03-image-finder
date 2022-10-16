@@ -14,16 +14,31 @@ export default class ImageGallery extends Component {
     query: '',
     page: 1,
   };
+  loadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+  async componentDidUpdate(_, prevState) {
+    if (
+      this.state.page === prevState.page ||
+      this.state.query === prevState.page
+    )
+      return;
+    console.log('aidshajnfioajfolaj');
+    this.getPictures();
+  }
 
-  async componentDidMount() {
-    const { page, query } = this.props;
+  async getPictures() {
+    const { page, query } = this.state;
     this.setState({ isLoading: true });
     try {
-      const resp = await getPictures();
+      const resp = await getPictures(query, page);
       this.setState(prevState => {
         console.log(prevState);
         return {
-          pics: [...resp.hits],
+          pics:
+            this.state.page === 1
+              ? [...resp.hits]
+              : [...prevState.pics, ...resp.hits],
         };
       });
     } catch (error) {
@@ -33,23 +48,29 @@ export default class ImageGallery extends Component {
     }
   }
 
+  async componentDidMount() {
+    this.getPictures();
+  }
+
   render() {
     return (
       <>
         {this.state.error && <span>{this.state.error}</span>}
 
         <ul className="gallery">
-          {this.state.pics.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <ImageGalleryItem
-              key={id}
-              webformatURL={webformatURL}
-              largeImageURL={largeImageURL}
-              tags={tags}
-            />
-          ))}
+          {this.state.pics
+            .slice(0, this.state.visible)
+            .map(({ webformatURL, largeImageURL, tags }) => (
+              <ImageGalleryItem
+                key={webformatURL}
+                webformatURL={webformatURL}
+                largeImageURL={largeImageURL}
+                tags={tags}
+              />
+            ))}
         </ul>
         {this.state.isLoading && <Loader />}
-        <Button func={this.loadNextPage}></Button>
+        <Button func={this.loadMore}></Button>
       </>
     );
   }
