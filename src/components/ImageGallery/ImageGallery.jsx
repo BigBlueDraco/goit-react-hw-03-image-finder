@@ -95,3 +95,8 @@ export default class ImageGallery extends Component {
     );
   }
 }
+
+ImageGallery.propTypes = {
+  query: PropTypes.string,
+  per_page: PropTypes.number,
+};

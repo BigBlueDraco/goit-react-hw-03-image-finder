@@ -12,3 +12,6 @@ export class Button extends Component {
     );
   }
 }
+Button.propTypes = {
+  func: PropTypes.func,
+};

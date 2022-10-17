@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 
 export default function ImageGalleryItem({
   webformatURL,
@@ -19,3 +18,10 @@ export default function ImageGalleryItem({
     </li>
   );
 }
+
+ImageGalleryItem.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string,
+  tags: PropTypes.string,
+  openLargeImage: PropTypes.func,
+};
