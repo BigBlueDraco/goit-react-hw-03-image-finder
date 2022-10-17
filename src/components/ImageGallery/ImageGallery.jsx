@@ -17,7 +17,7 @@ export default class ImageGallery extends Component {
       error: null,
       page: 1,
       per_page: props.per_page || 12,
-      modalIsOpen: true,
+      modalIsOpen: false,
       largeImageURL: '',
     };
   }
@@ -83,9 +83,8 @@ export default class ImageGallery extends Component {
           ))}
         </ul>
         {this.state.isLoading && <Loader />}
-        {this.state.page * this.state.per_page < 500 && (
-          <Button func={this.loadMore}></Button>
-        )}
+        {this.state.page * this.state.per_page < 500 &&
+          !this.state.isLoading && <Button func={this.loadMore}></Button>}
         {this.state.modalIsOpen && (
           <Modal
             largeImageURL={this.state.largeImageURL}

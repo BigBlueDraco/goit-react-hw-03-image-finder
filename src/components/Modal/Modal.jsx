@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// { largeImageURL, closeModal }
 export default class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handlerKey);
@@ -9,7 +8,6 @@ export default class Modal extends Component {
     window.removeEventListener('keydown', this.handlerKey);
   }
   handlerKey = e => {
-    console.log(e.key);
     if (e.key !== 'Escape') return;
     this.props.closeModal(e);
   };
@@ -20,7 +18,7 @@ export default class Modal extends Component {
         onClick={e => this.props.closeModal(e)}
         // onKeyDown={e => console.log(e)}
       >
-        <div class="Modal">
+        <div className="Modal">
           <img src={this.props.largeImageURL} alt="" />
         </div>
       </div>
