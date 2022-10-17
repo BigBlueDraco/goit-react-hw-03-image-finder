@@ -5,6 +5,10 @@ export class Button extends Component {
   //   static propTypes = {second: third}
 
   render() {
-    return <button onClick={e => this.props.func(e)}>Load more</button>;
+    return (
+      <button className="Button" onClick={e => this.props.func(e)}>
+        Load more
+      </button>
+    );
   }
 }

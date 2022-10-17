@@ -12,7 +12,6 @@ export default class Searchbar extends Component {
   handlerChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
-    console.log(this.state);
   };
   handlerSubmit = e => {
     e.preventDefault();
@@ -22,16 +21,17 @@ export default class Searchbar extends Component {
   reset = () => {};
   render() {
     return (
-      <header className="searchbar" onSubmit={e => this.props.handlerSubmit(e)}>
-        <form className="form">
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
+      <header className="Searchbar" onSubmit={e => this.handlerSubmit(e)}>
+        <form className="SearchForm">
+          <button type="submit" className="SearchForm-button">
+            <span className="SearchForm-button-label">Search</span>
           </button>
 
           <input
+            value={this.state.query}
             onInput={e => this.handlerChange(e)}
             name="query"
-            className="input"
+            className="SearchForm-input"
             type="text"
             autoComplete="off"
             autoFocus

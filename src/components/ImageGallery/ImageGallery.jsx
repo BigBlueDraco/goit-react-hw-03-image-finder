@@ -7,24 +7,30 @@ import { getPictures } from 'services/pixabayAPI';
 
 export default class ImageGallery extends Component {
   //   static propTypes = { second: third };
-  state = {
-    pics: [],
-    isLoading: false,
-    error: null,
-    query: '',
-    page: 1,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: props.query || '',
+      pics: [],
+      isLoading: false,
+      error: null,
+      page: 1,
+      per_page: props.per_page || 12,
+    };
+  }
   loadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
   async componentDidUpdate(_, prevState) {
+    if (this.state.query !== this.props.query) {
+      this.setState({ query: this.props.query, page: 1 });
+    }
     if (
-      this.state.page === prevState.page ||
-      this.state.query === prevState.page
-    )
-      return;
-    console.log('aidshajnfioajfolaj');
-    this.getPictures();
+      this.state.page !== prevState.page ||
+      this.state.query !== prevState.query
+    ) {
+      this.getPictures();
+    }
   }
 
   async getPictures() {
@@ -33,7 +39,6 @@ export default class ImageGallery extends Component {
     try {
       const resp = await getPictures(query, page);
       this.setState(prevState => {
-        console.log(prevState);
         return {
           pics:
             this.state.page === 1
@@ -57,20 +62,20 @@ export default class ImageGallery extends Component {
       <>
         {this.state.error && <span>{this.state.error}</span>}
 
-        <ul className="gallery">
-          {this.state.pics
-            .slice(0, this.state.visible)
-            .map(({ webformatURL, largeImageURL, tags }) => (
-              <ImageGalleryItem
-                key={webformatURL}
-                webformatURL={webformatURL}
-                largeImageURL={largeImageURL}
-                tags={tags}
-              />
-            ))}
+        <ul className="ImageGallery">
+          {this.state.pics.map(({ webformatURL, largeImageURL, tags }) => (
+            <ImageGalleryItem
+              key={webformatURL}
+              webformatURL={webformatURL}
+              largeImageURL={largeImageURL}
+              tags={tags}
+            />
+          ))}
         </ul>
         {this.state.isLoading && <Loader />}
-        <Button func={this.loadMore}></Button>
+        {this.state.page * this.state.per_page < 500 && (
+          <Button func={this.loadMore}></Button>
+        )}
       </>
     );
   }

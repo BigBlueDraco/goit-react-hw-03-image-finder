@@ -7,8 +7,8 @@ export default function ImageGalleryItem({
   tags,
 }) {
   return (
-    <li className="gallery-item" onClick={() => {}}>
-      <img src={webformatURL} alt={tags} />
+    <li className="ImageGalleryItem" onClick={() => {}}>
+      <img className="ImageGalleryItem-image" src={webformatURL} alt={tags} />
     </li>
   );
 }

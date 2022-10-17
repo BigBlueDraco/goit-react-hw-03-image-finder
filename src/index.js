@@ -8,7 +8,6 @@ const data = getPictures('cat');
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {console.log(data)}
-    <App />
+    <App className="App" />
   </React.StrictMode>
 );
