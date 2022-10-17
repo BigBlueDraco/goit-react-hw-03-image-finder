@@ -1,6 +1,7 @@
 import { Button } from 'components/Button/Button';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
+import Modal from 'components/Modal/Modal';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { getPictures } from 'services/pixabayAPI';
@@ -16,8 +17,16 @@ export default class ImageGallery extends Component {
       error: null,
       page: 1,
       per_page: props.per_page || 12,
+      modalIsOpen: true,
+      largeImageURL: '',
     };
   }
+  toggleModalWindow = url => {
+    this.setState(prevState => ({
+      modalIsOpen: !prevState.modalIsOpen,
+      largeImageURL: url,
+    }));
+  };
   loadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
@@ -29,11 +38,11 @@ export default class ImageGallery extends Component {
       this.state.page !== prevState.page ||
       this.state.query !== prevState.query
     ) {
-      this.getPictures();
+      this.loadPictures();
     }
   }
 
-  async getPictures() {
+  async loadPictures() {
     const { page, query } = this.state;
     this.setState({ isLoading: true });
     try {
@@ -54,7 +63,7 @@ export default class ImageGallery extends Component {
   }
 
   async componentDidMount() {
-    this.getPictures();
+    this.loadPictures();
   }
 
   render() {
@@ -69,12 +78,19 @@ export default class ImageGallery extends Component {
               webformatURL={webformatURL}
               largeImageURL={largeImageURL}
               tags={tags}
+              openLargeImage={this.toggleModalWindow}
             />
           ))}
         </ul>
         {this.state.isLoading && <Loader />}
         {this.state.page * this.state.per_page < 500 && (
           <Button func={this.loadMore}></Button>
+        )}
+        {this.state.modalIsOpen && (
+          <Modal
+            largeImageURL={this.state.largeImageURL}
+            closeModal={this.toggleModalWindow}
+          />
         )}
       </>
     );
