@@ -41,10 +41,10 @@ export default class ImageGallery extends Component {
   }
 
   async loadPictures() {
-    const { page, query } = this.state;
+    const { page, query, per_page } = this.state;
     this.setState({ isLoading: true });
     try {
-      const resp = await getPictures(query, page);
+      const resp = await getPictures(query, page, per_page);
       this.setState(prevState => {
         return {
           pics: this.state.page === 1 ? [...resp.hits] : [...prevState.pics, ...resp.hits],
