@@ -19,6 +19,7 @@ export default class ImageGallery extends Component {
       per_page: props.per_page || 12,
       modalIsOpen: false,
       largeImageURL: '',
+      totalHits: 0,
     };
   }
   toggleModalWindow = url => {
@@ -34,10 +35,7 @@ export default class ImageGallery extends Component {
     if (this.state.query !== this.props.query) {
       this.setState({ query: this.props.query, page: 1 });
     }
-    if (
-      this.state.page !== prevState.page ||
-      this.state.query !== prevState.query
-    ) {
+    if (this.state.page !== prevState.page || this.state.query !== prevState.query) {
       this.loadPictures();
     }
   }
@@ -49,10 +47,8 @@ export default class ImageGallery extends Component {
       const resp = await getPictures(query, page);
       this.setState(prevState => {
         return {
-          pics:
-            this.state.page === 1
-              ? [...resp.hits]
-              : [...prevState.pics, ...resp.hits],
+          pics: this.state.page === 1 ? [...resp.hits] : [...prevState.pics, ...resp.hits],
+          totalHits: resp.totalHits,
         };
       });
     } catch (error) {
@@ -83,13 +79,11 @@ export default class ImageGallery extends Component {
           ))}
         </ul>
         {this.state.isLoading && <Loader />}
-        {this.state.page * this.state.per_page < 500 &&
-          !this.state.isLoading && <Button func={this.loadMore}></Button>}
+        {this.state.page * this.state.per_page < this.state.totalHits && !this.state.isLoading && (
+          <Button func={this.loadMore}></Button>
+        )}
         {this.state.modalIsOpen && (
-          <Modal
-            largeImageURL={this.state.largeImageURL}
-            closeModal={this.toggleModalWindow}
-          />
+          <Modal largeImageURL={this.state.largeImageURL} closeModal={this.toggleModalWindow} />
         )}
       </>
     );
